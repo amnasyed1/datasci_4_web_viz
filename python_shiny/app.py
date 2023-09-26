@@ -35,7 +35,7 @@ def server(input, output, session):
         selected_county_avg = df_asthma[df_asthma['LocationName'] == input.county()]['Data_Value'].mean()
 
         fig, ax = plt.subplots(figsize=(10, 6))
-        ax.bar(['Selected County', 'Overall Average'], [selected_county_avg, overall_avg], color=['thistle', 'lemonchiffon'])
+        ax.bar(['Selected County', 'Overall Average'], [selected_county_avg, overall_avg], color=['lavender', 'lemonchiffon'])
         
         ax.set_ylabel('Data Value (Age-adjusted prevalence) - Percent')
         ax.set_ylim(0, 30)
@@ -44,4 +44,4 @@ def server(input, output, session):
         return fig
 
 
-app = App(app_ui, server)
+app = App(app_ui, server, debug=True)
