@@ -8,10 +8,10 @@ def load_data():
     return pd.read_csv(url)
 
 df = load_data()
-df_smoking = df[(df['MeasureId'] == 'SMOKING') & (df['Data_Value_Type'] == 'Age-adjusted prevalence')]
+df_asthma = df[(df['MeasureId'] == 'ASTHMA') & (df['Data_Value_Type'] == 'Age-adjusted prevalence')]
 
 # Available counties for selection
-counties = df_smoking['LocationName'].unique()
+counties = df_asthma['LocationName'].unique()
 
 app_ui = ui.page_fluid(
     ui.input_select("county", "Select County", {county: county for county in counties}),
@@ -25,21 +25,21 @@ def server(input, output, session):
     @render.text
     def avg_data_value():
         selected_county = input.county()
-        avg_value = df_smoking[df_smoking['LocationName'] == selected_county]['Data_Value'].mean()
-        return f"Average Current Smoking Age-adjusted Prevalence for {selected_county}: {avg_value:.2f}%"
+        avg_value = df_asthma[df_asthma['LocationName'] == selected_county]['Data_Value'].mean()
+        return f"Average Current Asthma Age-adjusted Prevalence for {selected_county}: {avg_value:.2f}%"
 
     @output
-    @render.plot(alt="Current Smoking Age-adjusted Prevalence Bar Chart")
+    @render.plot(alt="Current Asthma Age-adjusted Prevalence Bar Chart")
     def bar_chart():
-        overall_avg = df_smoking['Data_Value'].mean()
-        selected_county_avg = df_smoking[df_smoking['LocationName'] == input.county()]['Data_Value'].mean()
+        overall_avg = df_asthma['Data_Value'].mean()
+        selected_county_avg = df_asthma[df_asthma['LocationName'] == input.county()]['Data_Value'].mean()
 
         fig, ax = plt.subplots(figsize=(10, 6))
         ax.bar(['Selected County', 'Overall Average'], [selected_county_avg, overall_avg], color=['thistle', 'lemonchiffon'])
         
         ax.set_ylabel('Data Value (Age-adjusted prevalence) - Percent')
         ax.set_ylim(0, 30)
-        ax.set_title('Current Smoking Age-adjusted Prevalence Comparison')
+        ax.set_title('Current Asthma Age-adjusted Prevalence Comparison')
         
         return fig
 
